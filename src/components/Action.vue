@@ -18,7 +18,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import FiltersProject from "./FiltersProject.vue";
-import CreateCard from "./modal/CreateCard.vue";
 import { useListStore } from "../stores/listCard";
 import { useCardStore } from "../stores/card";
 import { useListSaveStore } from "../stores/listCardSave";
@@ -29,7 +28,7 @@ interface State {
   showModal: boolean;
 }
 export default defineComponent({
-  components: { FiltersProject, CreateCard, Confirm },
+  components: { FiltersProject, Confirm },
   data(): State {
     return {
       showModal: false,

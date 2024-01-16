@@ -40,8 +40,19 @@
       <input v-model="score" type="text" class="input-primary" />
     </div>
     <div class="form_btn-container">
-      <button @click.prevent="addCard()" class="add-card btn-primary">
+      <button
+        v-if="!!cardItem == false"
+        @click.prevent="addCard()"
+        class="add-card btn-primary"
+      >
         Добавить
+      </button>
+      <button
+        v-if="!!cardItem"
+        @click.prevent="changeCard()"
+        class="add-card btn-primary"
+      >
+        Сохранить
       </button>
       <button
         v-if="isCardType"
@@ -62,12 +73,14 @@ import { useProjectStore } from "../../stores/project";
 import { useCardStore } from "../../stores/card";
 import { useListStore } from "../../stores/listCard";
 import { List as ListInterface } from "../../types/listCard";
+import { Card as CardInterface } from "../../types/card";
 
 interface State {
   pval: Object | null;
   title: string | null;
   score: number | null;
   stage: string | null;
+  id: number | null;
 }
 
 export default defineComponent({
@@ -85,6 +98,10 @@ export default defineComponent({
       type: Boolean as PropType<Boolean>,
       required: true,
     },
+    cardItem: {
+      type: Object as PropType<CardInterface>,
+      required: false,
+    },
   },
   data(): State {
     return {
@@ -92,7 +109,19 @@ export default defineComponent({
       title: null,
       score: null,
       stage: null,
+      id: null,
     };
+  },
+  mounted() {
+    if (this.cardItem) {
+      if (!!this.cardItem.project) {
+        this.pval = this.cardItem.project[0];
+      }
+      this.title = this.cardItem.title;
+      this.score = this.cardItem.score;
+      this.stage = this.cardItem.stage;
+      this.id = this.cardItem.id;
+    }
   },
   methods: {
     /**
@@ -141,6 +170,19 @@ export default defineComponent({
         stage: this.stage || this.cardType,
       };
       this.$emit("addCard", item);
+    },
+    /**
+     * Обновляет картоку
+     */
+    changeCard() {
+      let item = {
+        title: this.title,
+        id: this.id,
+        score: this.score,
+        project: this.pval ? [this.pval] : false,
+        stage: this.stage || this.cardType,
+      };
+      this.$emit("changeCard", item);
     },
     indexTransition() {
       this.$router.push({ path: "/" });

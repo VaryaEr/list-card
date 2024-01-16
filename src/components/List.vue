@@ -34,6 +34,7 @@
               listStore.projectTypeSort == null ||
               element.project == listStore.projectTypeSort
             "
+            :cardTypeText="listItem.name"
             :cardItem="element"
           ></Card>
           <div v-else></div>
@@ -43,12 +44,12 @@
       <div @click="showModal = true" class="add-card">Добавить</div>
     </div>
   </div>
-  <CreateCard
+  <CardModal
     :cardTypeText="listItem.name"
     :cardType="listItem.code"
     v-if="showModal"
     @closeModal="closeModal()"
-  ></CreateCard>
+  ></CardModal>
 </template>
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
@@ -56,7 +57,7 @@ import draggable from "vuedraggable";
 import Card from "./Card.vue";
 import EmptyList from "./EmptyList.vue";
 import { List as ListInterface } from "../types/listCard";
-import CreateCard from "../components/modal/CreateCard.vue";
+import CardModal from "../components/modal/CardModal.vue";
 import { useListSaveStore } from "../stores/listCardSave";
 import { useCardStore } from "../stores/card";
 import { useListStore } from "../stores/listCard";
@@ -83,7 +84,7 @@ export default defineComponent({
     draggable,
     Card,
     EmptyList,
-    CreateCard,
+    CardModal,
   },
   data(): State {
     return {

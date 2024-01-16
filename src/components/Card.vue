@@ -3,7 +3,11 @@
     <div class="card_content">
       <div class="card_head">
         <div class="card_name">{{ cardItem.title }}</div>
-        <img class="card_edit" src="../assets/images/icons/NoteEdit.svg" />
+        <img
+          @click="showModal = true"
+          class="card_edit"
+          src="../assets/images/icons/NoteEdit.svg"
+        />
         <img
           class="card_delete"
           @click="removeCard(cardItem)"
@@ -36,6 +40,13 @@
         src="../assets/images/icons/OverflowMenuSecond.svg"
       />
     </div>
+    <CardModal
+      :cardTypeText="cardTypeText"
+      :cardType="cardItem.stage"
+      :cardItem="cardItem"
+      v-if="showModal"
+      @closeModal="closeModal()"
+    ></CardModal>
   </div>
 </template>
 
@@ -44,17 +55,38 @@ import { defineComponent, PropType } from "vue";
 import { Card as CardInterface } from "../types/card";
 import { useProjectStore } from "../stores/project";
 import { useCardStore } from "../stores/card";
+import CardModal from "./modal/CardModal.vue";
+
+interface State {
+  showModal: boolean;
+}
 
 export default defineComponent({
+  components: { CardModal },
   props: {
     cardItem: {
       type: Object as PropType<CardInterface>,
       required: true,
     },
+    cardTypeText: {
+      type: String as PropType<String>,
+      required: true,
+    },
+  },
+  data(): State {
+    return {
+      showModal: false,
+    };
   },
   methods: {
     removeCard<T extends CardInterface>(item: T) {
       this.cardStore.removeCard(item);
+    },
+    /**
+     * Знакрывает модальное окно
+     */
+    closeModal() {
+      this.showModal = false;
     },
   },
   computed: {

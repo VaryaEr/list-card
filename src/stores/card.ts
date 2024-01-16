@@ -50,18 +50,47 @@ export const useCardStore = defineStore("card", {
             
         },
         /**
-     * Добавляет новую карточку
+     * Удаляет выбранную карточку
      *
      * @param {CardInterface} item
      */
         removeCard<T extends CardInterface>(item: T){
             if(this.cards){
-            let cardIndex = this.cards.findIndex(
-                (el) => el.id == item.id
-              );
-                this.cards.splice(cardIndex, 1)
-                this.listStore.setCardsToList(this.cards)
+                let cardIndex = this.findIndex(item)
+                if(cardIndex){
+                    this.cards.splice(cardIndex, 1)
+                    this.listStore.setCardsToList(this.cards)
+                }
+                
             }
+        },
+        /**
+     * Обновляет выбранную карточку
+     *
+     * @param {CardInterface} item
+     */
+        changeCard<T extends CardInterface>(item: T){
+            if(this.cards){
+                let cardIndex = this.findIndex(item)
+                if(cardIndex != null){
+                    this.cards[cardIndex] = item
+                    this.listStore.setCardsToList(this.cards)
+                }
+                
+            }
+        },
+         /**
+     * Поиск index карточки
+     *
+     * @param {CardInterface} item
+     */
+        findIndex<T extends CardInterface>(item: T){
+            if(this.cards){
+                return this.cards.findIndex(
+                    (el) => el.id == item.id
+                );
+            }
+            return null
         }
     },
 });

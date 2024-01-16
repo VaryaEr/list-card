@@ -7,6 +7,8 @@
         :isCardType="false"
         @closeModal="closeModal()"
         @addCard="addCard"
+        @changeCard="changeCard"
+        :cardItem="cardItem"
       ></CreatCardForm>
     </div>
   </div>
@@ -33,11 +35,20 @@ export default defineComponent({
       type: String as PropType<String>,
       required: true,
     },
+    cardItem: {
+      type: Object as PropType<CardInterface>,
+      required: false,
+    },
   },
   data(): State {
     return {
       item: null,
     };
+  },
+  mounted() {
+    if (this.cardItem) {
+      this.item = this.cardItem;
+    }
   },
   methods: {
     /**
@@ -53,6 +64,15 @@ export default defineComponent({
      */
     addCard<T extends CardInterface>(item: T) {
       this.cardStore.createCard(item);
+      this.closeModal();
+    },
+    /**
+     * Обновляет картоку
+     *
+     * @param {object} item
+     */
+    changeCard<T extends CardInterface>(item: T) {
+      this.cardStore.changeCard(item);
       this.closeModal();
     },
   },
