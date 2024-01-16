@@ -9,6 +9,7 @@ export const useCardStore = defineStore("card", {
         return { 
             cards: null as Filter,
             isInit: true as Boolean,
+            id: 0 as number,
         };
     },
     persist: true,
@@ -27,6 +28,9 @@ export const useCardStore = defineStore("card", {
             this.cards = items
             if(this.cards === null || this.isInit){
                 this.listStore.setCardsToList(items)
+                if(this.isInit){
+                    this.id = Number(this.cards?.length)
+                }
             }
         },
     /**
@@ -37,12 +41,27 @@ export const useCardStore = defineStore("card", {
         createCard<T extends CardInterface>(item: T){
             let card = item
             if(this.cards){
-                card.id = this.cards?.length + 1
+                this.id ++
+                card.id = this.id
                 this.cards?.push(item)
                 this.listStore.createCard(item)
                 this.listStore.setCardsToList(this.cards)
             }
             
+        },
+        /**
+     * Добавляет новую карточку
+     *
+     * @param {CardInterface} item
+     */
+        removeCard<T extends CardInterface>(item: T){
+            if(this.cards){
+            let cardIndex = this.cards.findIndex(
+                (el) => el.id == item.id
+              );
+                this.cards.splice(cardIndex, 1)
+                this.listStore.setCardsToList(this.cards)
+            }
         }
     },
 });

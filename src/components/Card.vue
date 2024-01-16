@@ -4,7 +4,11 @@
       <div class="card_head">
         <div class="card_name">{{ cardItem.title }}</div>
         <img class="card_edit" src="../assets/images/icons/NoteEdit.svg" />
-        <img class="card_delete" src="../assets/images/icons/Garbage.svg" />
+        <img
+          class="card_delete"
+          @click="removeCard(cardItem)"
+          src="../assets/images/icons/Garbage.svg"
+        />
       </div>
       <div class="car_body">
         <div class="card_point simple-text">
@@ -39,6 +43,7 @@
 import { defineComponent, PropType } from "vue";
 import { Card as CardInterface } from "../types/card";
 import { useProjectStore } from "../stores/project";
+import { useCardStore } from "../stores/card";
 
 export default defineComponent({
   props: {
@@ -47,9 +52,17 @@ export default defineComponent({
       required: true,
     },
   },
+  methods: {
+    removeCard<T extends CardInterface>(item: T) {
+      this.cardStore.removeCard(item);
+    },
+  },
   computed: {
     cardProject: () => {
       return useProjectStore();
+    },
+    cardStore: () => {
+      return useCardStore();
     },
   },
 });
