@@ -38,14 +38,6 @@ export default defineComponent({
       item: null,
     };
   },
-  mounted() {
-    this.listStore.setListItems(
-      JSON.parse(JSON.stringify(this.listSaveStore.lSave))
-    );
-    this.cardStore.setCardItems(
-      JSON.parse(JSON.stringify(this.cardSaveStore.cSave))
-    );
-  },
   methods: {
     /**
      * Добавляет карточку в список
@@ -54,28 +46,13 @@ export default defineComponent({
      */
     addCard<T extends CardInterface>(item: T) {
       this.cardStore.createCard(item);
-      this.upddateCards();
+      this.indexTransition();
     },
     /**
      * Переход на главную страницу
      */
     indexTransition() {
       this.$router.push({ path: "/" });
-    },
-    /**
-     * Сохранение изменений после соглашения с даилоговым окном
-     */
-    upddateCards() {
-      this.listStore.isInit = false;
-      this.cardStore.isInit = false;
-
-      let lists = JSON.parse(JSON.stringify(this.listStore.lists));
-      this.listSaveStore.setListItems(lists);
-
-      let cards = JSON.parse(JSON.stringify(this.cardStore.cards));
-      this.cardSaveStore.setCardItems(cards);
-
-      this.indexTransition();
     },
   },
   computed: {
